@@ -1,23 +1,16 @@
 //
-//  ViewController.swift
+//  QuizBrain.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by Saad Mahmud on 28.5.2023.
+//  Copyright © 2023 The App Brewery. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
+struct QiozBrain{
     
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
-    
-    var questionCount = 0
-    
+    var currentQuestionIndex = 0
     let quiz = [Question(q: "A slug's blood is green.", a: "True"),
                 Question(q: "Approximately one quarter of human bones are in the feet.", a: "True"),
                 Question(q: "The total surface area of two human lungs is approximately 70 square metres.", a: "True"),
@@ -32,43 +25,19 @@ class ViewController: UIViewController {
                 Question(q: "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.", a: "True")
     ]
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        updateUI()
+    func userDidRight(_ answer: String)-> Bool{
+        return answer == quiz[currentQuestionIndex].answer
     }
     
-    
-    @IBAction func buttonPressed(_ sender: UIButton) {
-        let userAnswer = sender.titleLabel?.text
-        let actualAnswer = quiz[questionCount].answer
-        
-        print("userAnswer "+(userAnswer ?? ""))
-        print("actualAnswer "+actualAnswer)
-        if userAnswer == actualAnswer{
-            sender.backgroundColor = UIColor.green
+    mutating func updateQuestionProgress(){
+        if currentQuestionIndex < quiz.count-1 {
+            currentQuestionIndex += 1
         }else {
-            sender.backgroundColor = UIColor.red
+            currentQuestionIndex = 0
         }
-        
-        if questionCount < quiz.count-1 {
-            questionCount += 1
-        }else {
-            questionCount = 0
-        }
-        
-        Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
-        
-//        updateUI()
-        
     }
     
-    
-    @objc private func updateUI() {
-        questionLabel.text = quiz[questionCount].question
-        
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
+    func getQuestionText() -> String {
+        return quiz[currentQuestionIndex].question
     }
 }
-
